@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+:root { color-scheme: dark; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(52, 211, 153, 0.11), transparent 32rem),
+    #080d0b;
+  color: #d4d4d8;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 3px;
+}
+
+.font-display { font-family: Arial, Helvetica, sans-serif; }
+
+.eyebrow {
+  color: #6ee7b7;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+::selection { background: #34d399; color: #07100b; }
