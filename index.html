@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brands War - Ranking de Empresas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0D1117;
+            --bg-secondary: #11161D;
+            --bg-card: #161C24;
+            --bg-card-hover: #1A212B;
+            --accent-green: #2EA043;
+            --accent-green-light: #3FB950;
+            --accent-green-dark: #238636;
+            --accent-green-dim: #1F3D2B;
+            --accent-blue: #1F6FEB;
+            --accent-blue-hover: #388BFD;
+            --text-primary: #C9D1D9;
+            --text-secondary: #8B949E;
+            --text-muted: #484F58;
+            --text-green: #7EE787;
+            --border-light: #21262D;
+            --border-medium: #30363D;
+            --border-green: #1F4D32;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --shadow-blue: 0 4px 16px rgba(31, 111, 235, 0.25);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Montserrat', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            padding: 50px 20px 35px;
+            text-align: center;
+            background: transparent;
+        }
+
+        .logo {
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .logo span {
+            color: var(--accent-green-light);
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 0.95em;
+            font-weight: 300;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+
+        /* Navegación de categorías */
+        .categories-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-green);
+        }
+
+        .category-btn {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            padding: 10px 18px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .category-btn:hover {
+            background: var(--accent-green-dim);
+            color: var(--text-green);
+            border-color: var(--border-green);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-btn.active {
+            background: var(--accent-green-dim);
+            border-color: var(--border-green);
+            color: var(--text-green);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-weight: 400;
+        }
+
+        .breadcrumb a {
+            color: var(--accent-green-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+            color: var(--text-green);
+        }
+
+        .breadcrumb span {
+            margin: 0 5px;
+            color: var(--border-medium);
+        }
+
+        /* Título del ranking */
+        .ranking-title {
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .ranking-subtitle {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            font-weight: 300;
+        }
+
+        .disclaimer {
+            background: var(--bg-card);
+            border: 1px solid var(--border-green);
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 0.82em;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .disclaimer strong {
+            color: var(--text-green);
+            font-weight: 600;
+        }
+
+        /* Ranking items */
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ranking-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ranking-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border-green);
+            background: var(--bg-card-hover);
+        }
+
+        .ranking-item.top-3 {
+            background: linear-gradient(135deg, #161C24 0%, #141B22 100%);
+            border-color: var(--border-green);
+        }
+
+        /* Ranking tag (pill-shaped) */
+        .ranking-tag {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--accent-green-dim);
+            color: var(--text-green);
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.8em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            border: 1px solid var(--border-green);
+        }
+
+        .position-1 .ranking-tag {
+            background: #1F4D32;
+            color: #7EE787;
+            border-color: #2EA043;
+        }
+
+        .position-2 .ranking-tag {
+            background: #1A3D2A;
+            color: #6EE7A0;
+            border-color: #3B7A52;
+        }
+
+        .position-3 .ranking-tag {
+            background: #162D20;
+            color: #5CDB7E;
+            border-color: #2D5A3D;
+        }
+
+        .position {
+            font-size: 2.2em;
+            font-weight: 700;
+            min-width: 50px;
+            text-align: center;
+            color: var(--accent-green-light);
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 30px;
+        }
+
+        /* Logo de la empresa */
+        .company-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--accent-green-light);
+            border: 1px solid var(--border-green);
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .ranking-item:hover .company-logo {
+            transform: scale(1.05);
+            border-color: var(--accent-green-light);
+        }
+
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-initials {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-green-dim);
+            color: var(--text-green);
+            font-size: 1.3em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .company-info {
+            flex: 1;
+            min-width: 200px;
+            margin-top: 30px;
+        }
+
+        .company-name {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: var(--text-primary);
+        }
+
+        .company-category {
+            color: var(--text-green);
+            font-size: 0.85em;
+            font-weight: 400;
+        }
+
+        .company-description {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-top: 10px;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        .company-website {
+            margin-top: 6px;
+            font-size: 0.82em;
+        }
+
+        .company-website a {
+            color: var(--accent-green-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .company-website a:hover {
+            color: var(--text-green);
+            text-decoration: underline;
+        }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.72em;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-sponsored {
+            background: var(--accent-green-dim);
+            color: var(--text-green);
+            border: 1px solid var(--border-green);
+        }
+
+        .badge-verified {
+            background: #1A3D2A;
+            color: #7EE787;
+            border: 1px solid #2D5A3D;
+        }
+
+        .badge-top {
+            background: #1F4D32;
+            color: #86EFAC;
+            border: 1px solid #3B7A52;
+        }
+
+        /* Botón de puja */
+        .bid-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            margin-left: auto;
+            margin-top: 30px;
+        }
+
+        .bid-button {
+            background: var(--accent-blue);
+            color: var(--text-green);
+            border: 1px solid #388BFD;
+            padding: 12px 24px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.85em;
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .bid-button:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-blue);
+            color: #A5F3B4;
+        }
+
+        /* Modal de puja */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            margin: 5% auto;
+            padding: 35px;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 560px;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-green);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .close-modal:hover {
+            color: var(--text-green);
+        }
+
+        .modal-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3em;
+            letter-spacing: -0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9em;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 3px rgba(46, 160, 67, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-medium);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .file-upload:hover {
+            border-color: var(--accent-green);
+            background: var(--bg-primary);
+        }
+
+        .file-upload img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            display: none;
+            border-radius: var(--radius-sm);
+        }
+
+        .bid-info {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-green);
+        }
+
+        .bid-info p {
+            margin: 5px 0;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .bid-info strong {
+            color: var(--text-green);
+        }
+
+        .confirm-bid-button {
+            width: 100%;
+            background: var(--accent-blue);
+            color: var(--text-green);
+            border: 1px solid #388BFD;
+            padding: 14px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .confirm-bid-button:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-blue);
+            color: #A5F3B4;
+        }
+
+        .confirm-bid-button:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border-medium);
+            color: var(--text-secondary);
+        }
+
+        /* Notificación */
+        .notification {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent-green-dark);
+            color: var(--text-primary);
+            padding: 18px 24px;
+            border-radius: var(--radius-sm);
+            z-index: 1001;
+            animation: slideIn 0.4s ease;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.9em;
+            font-weight: 500;
+            border: 1px solid var(--accent-green-light);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            color: var(--text-muted);
+            font-size: 0.8em;
+            font-weight: 300;
+            border-top: 1px solid var(--border-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px 20px;
+            }
+            
+            .logo {
+                font-size: 1.8em;
+            }
+            
+            .ranking-item {
+                flex-direction: column;
+                text-align: left;
+                gap: 15px;
+                padding: 20px;
+            }
+            
+            .position {
+                font-size: 1.8em;
+                min-width: auto;
+                margin-top: 20px;
+            }
+            
+            .company-logo {
+                width: 56px;
+                height: 56px;
+                margin-top: 20px;
+            }
+            
+            .badges {
+                justify-content: flex-start;
+            }
+            
+            .ranking-tag {
+                top: 15px;
+                left: 15px;
+                font-size: 0.75em;
+            }
+            
+            .bid-section {
+                align-items: flex-start;
+                margin-left: 0;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .bid-button {
+                width: 100%;
+            }
+            
+            .categories-nav {
+                position: static;
+                gap: 8px;
+            }
+            
+            .category-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">BRANDS <span>WAR</span></div>
+        <div class="tagline">El campo de batalla de las mejores empresas</div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Navegación de categorías -->
+        <nav class="categories-nav">
+            <button class="category-btn active" data-category="all" onclick="navigateTo('all')">Todas</button>
+            <button class="category-btn" data-category="tech" onclick="navigateTo('tech')">Tecnología</button>
+            <button class="category-btn" data-category="gastro" onclick="navigateTo('gastro')">Gastronomía</button>
+            <button class="category-btn" data-category="retail" onclick="navigateTo('retail')">Retail</button>
+            <button class="category-btn" data-category="services" onclick="navigateTo('services')">Servicios</button>
+            <button class="category-btn" data-category="health" onclick="navigateTo('health')">Salud</button>
+            <button class="category-btn" data-category="streamers" onclick="navigateTo('streamers')">Streamers</button>
+        </nav>
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" id="breadcrumb">
+            <a href="#" onclick="navigateTo('all'); return false;">Inicio</a>
+            <span>›</span>
+            <span id="currentPage">Todas las categorías</span>
+        </div>
+
+        <!-- Contenido dinámico -->
+        <div id="pageContent">
+            <!-- Aquí se cargará el contenido según la categoría -->
+        </div>
+    </div>
+
+    <!-- Modal de puja -->
+    <div class="modal" id="bidModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeBidModal()">&times;</button>
+            <h2 class="modal-title">Puja por este puesto</h2>
+            
+            <div class="bid-info">
+                <p><strong>Puesto:</strong> <span id="modalPosition"></span></p>
+                <p><strong>Empresa actual:</strong> <span id="modalCompany"></span></p>
+            </div>
+            
+            <form id="bidForm" onsubmit="submitBidForm(event)">
+                <div class="form-group">
+                    <label>Nombre de la empresa *</label>
+                    <input type="text" class="form-input" id="companyName" required placeholder="Ej: Mi Empresa S.A.">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email de contacto *</label>
+                    <input type="email" class="form-input" id="companyEmail" required placeholder="contacto@miempresa.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Teléfono *</label>
+                    <input type="tel" class="form-input" id="companyPhone" required placeholder="+54 11 2345-6789">
+                </div>
+                
+                <div class="form-group">
+                    <label>Logo de la empresa *</label>
+                    <div class="file-upload" onclick="document.getElementById('logoUpload').click()">
+                        <input type="file" id="logoUpload" accept="image/*" style="display: none;" onchange="handleLogoUpload(event)">
+                        <p id="uploadText">📁 Haz clic para subir tu logo</p>
+                        <img id="logoPreview" alt="Vista previa del logo">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descripción de la empresa *</label>
+                    <textarea class="form-input" id="companyDescription" required placeholder="Describe tu empresa en pocas palabras..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Página web (opcional)</label>
+                    <input type="url" class="form-input" id="companyWebsite" placeholder="https://www.miempresa.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Red social *</label>
+                    <input type="url" class="form-input" id="companySocial" required placeholder="https://instagram.com/miempresa">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tu puja en ARS *</label>
+                    <input type="number" class="form-input" id="bidAmount" required placeholder="Ingresa tu puja en pesos argentinos">
+                </div>
+                
+                <button type="submit" class="confirm-bid-button" id="submitBtn">
+                    Confirmar y Pagar con MercadoPago
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notificación -->
+    <div class="notification" id="notification">
+        ✅ ¡Operación exitosa!
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2024 Brands War - Todos los derechos reservados</p>
+        <p style="margin-top: 5px;">
+            Las posiciones se determinan mediante pujas transparentes.
+        </p>
+    </div>
+
+    <script>
+        // Base de datos de empresas por categoría
+        const companiesDatabase = {
+            tech: [
+                {
+                    position: 1,
+                    name: "TechNova Solutions",
+                    category: "Tecnología",
+                    logo: "TN",
+                    logoColor: "#1F3D2B",
+                    description: "Soluciones tecnológicas innovadoras para empresas en crecimiento. Especialistas en desarrollo de software y consultoría IT.",
+                    website: "https://www.technova.com",
+                    social: "@technova",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 2,
+                    name: "DigitalCraft Agency",
+                    category: "Tecnología",
+                    logo: "DC",
+                    logoColor: "#1F4D32",
+                    description: "Agencia digital especializada en diseño web y marketing digital. Creamos experiencias únicas para tu marca.",
+                    website: "https://www.digitalcraft.com",
+                    social: "@digitalcraft",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 3,
+                    name: "CloudMatrix",
+                    category: "Tecnología",
+                    logo: "CM",
+                    logoColor: "#238636",
+                    description: "Servicios de cloud computing y almacenamiento empresarial. Tu infraestructura en las nubes.",
+                    website: "https://www.cloudmatrix.com",
+                    social: "@cloudmatrix",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 4,
+                    name: "DataForge Systems",
+                    category: "Tecnología",
+                    logo: "DF",
+                    logoColor: "#2EA043",
+                    description: "Análisis de datos y business intelligence para tomar mejores decisiones empresariales.",
+                    website: "",
+                    social: "@dataforge",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 5,
+                    name: "CyberShield Security",
+                    category: "Tecnología",
+                    logo: "CS",
+                    logoColor: "#1F3D2B",
+                    description: "Protección y seguridad informática para empresas. Mantén tus datos seguros.",
+                    website: "https://www.cybershield.com",
+                    social: "@cybershield",
+                    sponsored: true,
+                    verified: true
+                }
+            ],
+            gastro: [
+                {
+                    position: 1,
+                    name: "GastroPrime",
+                    category: "Gastronomía",
+                    logo: "GP",
+                    logoColor: "#1F3D2B",
+                    description: "Restaurante de alta cocina con los mejores chefs. Experiencia gastronómica única.",
+                    website: "https://www.gastroprime.com",
+                    social: "@gastroprime",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 2,
+                    name: "FreshFoods Market",
+                    category: "Gastronomía",
+                    logo: "FF",
+                    logoColor: "#1F4D32",
+                    description: "Productos frescos y orgánicos directamente del productor. Calidad garantizada.",
+                    website: "",
+                    social: "@freshfoods",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 3,
+                    name: "SaborLatino Restaurante",
+                    category: "Gastronomía",
+                    logo: "SL",
+                    logoColor: "#238636",
+                    description: "Auténtica comida latina con recetas tradicionales. El sabor de casa.",
+                    website: "https://www.saborlatino.com",
+                    social: "@saborlatino",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 4,
+                    name: "SushiMaster",
+                    category: "Gastronomía",
+                    logo: "SM",
+                    logoColor: "#2EA043",
+                    description: "El mejor sushi de la ciudad. Ingredientes frescos y preparación al momento.",
+                    website: "https://www.sushimaster.com",
+                    social: "@sushimaster",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 5,
+                    name: "PizzaArtigianale",
+                    category: "Gastronomía",
+                    logo: "PA",
+                    logoColor: "#1F3D2B",
+                    description: "Pizzas artesanales al horno de barro. Recetas italianas auténticas.",
+                    website: "",
+                    social: "@pizzaartigianale",
+                    sponsored: false,
+                    verified: true
+                }
+            ],
+            retail: [
+                {
+                    position: 1,
+                    name: "UrbanStyle Retail",
+                    category: "Retail",
+                    logo: "UR",
+                    logoColor: "#1F3D2B",
+                    description: "Moda urbana y tendencias. Las últimas novedades en ropa y accesorios.",
+                    website: "https://www.urbanstyle.com",
+                    social: "@urbanstyle",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 2,
+                    name: "ModaExpress",
+                    category: "Retail",
+                    logo: "ME",
+                    logoColor: "#1F4D32",
+                    description: "Todo en moda femenina y masculina. Envíos a todo el país.",
+                    website: "https://www.modaexpress.com",
+                    social: "@modaexpress",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 3,
+                    name: "ElectroHogar",
+                    category: "Retail",
+                    logo: "EH",
+                    logoColor: "#238636",
+                    description: "Electrodomésticos y tecnología para tu hogar. Los mejores precios.",
+                    website: "",
+                    social: "@electrohogar",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 4,
+                    name: "DeportesMax",
+                    category: "Retail",
+                    logo: "DM",
+                    logoColor: "#2EA043",
+                    description: "Todo para deportes y fitness. Equipamiento profesional para atletas.",
+                    website: "https://www.deportesmax.com",
+                    social: "@deportesmax",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 5,
+                    name: "LibreríaCentral",
+                    category: "Retail",
+                    logo: "LC",
+                    logoColor: "#1F3D2B",
+                    description: "Libros, artículos de librería y regalos. Tu tienda cultural de confianza.",
+                    website: "",
+                    social: "@libreriacentral",
+                    sponsored: false,
+                    verified: true
+                }
+            ],
+            services: [
+                {
+                    position: 1,
+                    name: "QuickService Pro",
+                    category: "Servicios",
+                    logo: "QS",
+                    logoColor: "#1F3D2B",
+                    description: "Servicios profesionales de calidad. Soluciones rápidas y eficientes.",
+                    website: "",
+                    social: "@quickservice",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 2,
+                    name: "EliteFitness Center",
+                    category: "Servicios",
+                    logo: "EF",
+                    logoColor: "#1F4D32",
+                    description: "Gimnasio de élite con entrenadores personales. Tu mejor versión comienza aquí.",
+                    website: "https://www.elitefitness.com",
+                    social: "@elitefitness",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 3,
+                    name: "LimpiezaTotal",
+                    category: "Servicios",
+                    logo: "LT",
+                    logoColor: "#238636",
+                    description: "Servicios de limpieza profesional para hogares y empresas.",
+                    website: "",
+                    social: "@limpiezatotal",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 4,
+                    name: "ConsultoríaPro",
+                    category: "Servicios",
+                    logo: "CP",
+                    logoColor: "#2EA043",
+                    description: "Consultoría empresarial estratégica. Impulsa tu negocio al siguiente nivel.",
+                    website: "https://www.consultoriapro.com",
+                    social: "@consultoriapro",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 5,
+                    name: "MarketingDigital",
+                    category: "Servicios",
+                    logo: "MD",
+                    logoColor: "#1F3D2B",
+                    description: "Agencia de marketing digital. Aumenta tu presencia online y ventas.",
+                    website: "https://www.marketingdigital.com",
+                    social: "@marketingdigital",
+                    sponsored: false,
+                    verified: true
+                }
+            ],
+            health: [
+                {
+                    position: 1,
+                    name: "HealthPlus Clinics",
+                    category: "Salud",
+                    logo: "HP",
+                    logoColor: "#1F3D2B",
+                    description: "Clínicas de salud integral. Atención médica de calidad para toda la familia.",
+                    website: "https://www.healthplus.com",
+                    social: "@healthplus",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 2,
+                    name: "DentalCare",
+                    category: "Salud",
+                    logo: "DC",
+                    logoColor: "#1F4D32",
+                    description: "Clínica dental especializada. Sonrisas perfectas garantizadas.",
+                    website: "",
+                    social: "@dentalcare",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 3,
+                    name: "FisioterapiaPlus",
+                    category: "Salud",
+                    logo: "FP",
+                    logoColor: "#238636",
+                    description: "Centro de fisioterapia y rehabilitación. Recupérate más rápido.",
+                    website: "https://www.fisioterapiaplus.com",
+                    social: "@fisioterapiaplus",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 4,
+                    name: "NutriVida",
+                    category: "Salud",
+                    logo: "NV",
+                    logoColor: "#2EA043",
+                    description: "Nutricionistas profesionales. Planes de alimentación personalizados.",
+                    website: "",
+                    social: "@nutrivida",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 5,
+                    name: "PsicologíaOnline",
+                    category: "Salud",
+                    logo: "PO",
+                    logoColor: "#1F3D2B",
+                    description: "Terapia psicológica online. Cuida tu salud mental desde casa.",
+                    website: "https://www.psicologiaonline.com",
+                    social: "@psicologiaonline",
+                    sponsored: false,
+                    verified: true
+                }
+            ],
+            streamers: [
+                {
+                    position: 1,
+                    name: "GamerProMax",
+                    category: "Streamer",
+                    logo: "GM",
+                    logoColor: "#1F3D2B",
+                    description: "Streamer profesional de videojuegos competitivos. Torneos y contenido diario.",
+                    website: "https://www.twitch.tv/gamerpromax",
+                    social: "@gamerpromax",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 2,
+                    name: "StreamQueen",
+                    category: "Streamer",
+                    logo: "SQ",
+                    logoColor: "#1F4D32",
+                    description: "Creadora de contenido variado: gaming, charlas y entretenimiento.",
+                    website: "https://www.youtube.com/streamqueen",
+                    social: "@streamqueen",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 3,
+                    name: "ProPlayerARG",
+                    category: "Streamer",
+                    logo: "PA",
+                    logoColor: "#238636",
+                    description: "Jugador profesional de e-sports. Especialista en juegos de estrategia.",
+                    website: "https://www.twitch.tv/proplayerarg",
+                    social: "@proplayerarg",
+                    sponsored: true,
+                    verified: true
+                },
+                {
+                    position: 4,
+                    name: "CreativeMind",
+                    category: "Streamer",
+                    logo: "CM",
+                    logoColor: "#2EA043",
+                    description: "Streamer creativo: arte digital, diseño y contenido educativo.",
+                    website: "",
+                    social: "@creativemind",
+                    sponsored: false,
+                    verified: true
+                },
+                {
+                    position: 5,
+                    name: "MusicStreamer",
+                    category: "Streamer",
+                    logo: "MS",
+                    logoColor: "#1F3D2B",
+                    description: "Músico y streamer. Conciertos en vivo y composición en tiempo real.",
+                    website: "https://www.twitch.tv/musicstreamer",
+                    social: "@musicstreamer",
+                    sponsored: false,
+                    verified: true
+                }
+            ]
+        };
+
+        // Estado actual
+        let currentCategory = 'all';
+        let selectedPosition = null;
+        let currentCompanies = [];
+        let uploadedLogo = null;
+
+        // Función para obtener empresas según categoría
+        function getCompaniesForCategory(category) {
+            if (category === 'all') {
+                let allCompanies = [];
+                Object.values(companiesDatabase).forEach(companies => {
+                    allCompanies = allCompanies.concat(companies);
+                });
+                return allCompanies.slice(0, 8).map((company, index) => ({
+                    ...company,
+                    position: index + 1
+                }));
+            }
+            return companiesDatabase[category] || [];
+        }
+
+        // Función para navegar entre categorías
+        function navigateTo(category) {
+            currentCategory = category;
+            currentCompanies = getCompaniesForCategory(category);
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            const categoryNames = {
+                'all': 'Todas las categorías',
+                'tech': 'Tecnología',
+                'gastro': 'Gastronomía',
+                'retail': 'Retail',
+                'services': 'Servicios',
+                'health': 'Salud',
+                'streamers': 'Streamers'
+            };
+            document.getElementById('currentPage').textContent = categoryNames[category];
+            
+            renderPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if (category === 'all') {
+                history.pushState(null, '', '#');
+            } else {
+                history.pushState(null, '', `#${category}`);
+            }
+        }
+
+        // Función para renderizar la página completa
+        function renderPage() {
+            const pageContent = document.getElementById('pageContent');
+            
+            if (currentCompanies.length === 0) {
+                pageContent.innerHTML = `
+                    <div style="text-align: center; padding: 50px 0;">
+                        <h3 style="color: var(--text-secondary); font-weight: 500;">No hay empresas en esta categoría</h3>
+                        <p style="color: var(--text-muted); margin-top: 10px; font-weight: 300;">¡Sé el primero en aparecer!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const categoryNames = {
+                'all': 'TOP EMPRESAS',
+                'tech': 'TOP TECNOLOGÍA',
+                'gastro': 'TOP GASTRONOMÍA',
+                'retail': 'TOP RETAIL',
+                'services': 'TOP SERVICIOS',
+                'health': 'TOP SALUD',
+                'streamers': 'TOP STREAMERS'
+            };
+            
+            pageContent.innerHTML = `
+                <h2 class="ranking-title">${categoryNames[currentCategory]}</h2>
+                <p class="ranking-subtitle">Ranking en tiempo real · Las empresas pueden pujar por mejores posiciones</p>
+                
+                <div class="disclaimer">
+                    <strong>Transparencia:</strong> Todas las posiciones pueden ser compradas mediante pujas.
+                </div>
+                
+                <div class="ranking-list" id="rankingList">
+                    ${currentCompanies.map(company => renderRankingItem(company)).join('')}
+                </div>
+            `;
+        }
+
+        // Función para renderizar un item del ranking
+        function renderRankingItem(item) {
+            const positionClass = item.position === 1 ? 'position-1' : 
+                                item.position === 2 ? 'position-2' : 
+                                item.position === 3 ? 'position-3' : '';
+            
+            const logoHTML = item.logoUrl ? 
+                `<img src="${item.logoUrl}" alt="${item.name} logo">` :
+                `<div class="logo-initials" style="background: ${item.logoColor || '#1F3D2B'};">
+                    ${item.logo}
+                </div>`;
+            
+            const rankLabel = item.position === 1 ? '#1' : 
+                            item.position === 2 ? '#2' : 
+                            item.position === 3 ? '#3' : `#${item.position}`;
+            
+            return `
+                <div class="ranking-item ${positionClass} ${item.position <= 3 ? 'top-3' : ''}">
+                    <span class="ranking-tag">${rankLabel}</span>
+                    <div class="position">${item.position}</div>
+                    <div class="company-logo">
+                        ${logoHTML}
+                    </div>
+                    <div class="company-info">
+                        <div class="company-name">${item.name}</div>
+                        <div class="company-category">${item.category}</div>
+                        <div class="badges">
+                            ${item.sponsored ? '<span class="badge badge-sponsored">Patrocinado</span>' : ''}
+                            ${item.verified ? '<span class="badge badge-verified">✓ Verificado</span>' : ''}
+                            ${item.position <= 3 ? '<span class="badge badge-top">Top</span>' : ''}
+                        </div>
+                        <div class="company-description">${item.description}</div>
+                        ${item.website ? `<div class="company-website">🌐 <a href="${item.website}" target="_blank">${item.website}</a></div>` : ''}
+                    </div>
+                    <div class="bid-section">
+                        <button class="bid-button" onclick="openBidModal(${item.position})">
+                            Quiero este puesto
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para abrir el modal de puja
+        function openBidModal(position) {
+            selectedPosition = position;
+            const item = currentCompanies.find(d => d.position === position);
+            
+            if (!item) return;
+            
+            document.getElementById('modalPosition').textContent = `#${position}`;
+            document.getElementById('modalCompany').textContent = item.name;
+            
+            document.getElementById('companyName').value = '';
+            document.getElementById('companyEmail').value = '';
+            document.getElementById('companyPhone').value = '';
+            document.getElementById('companyDescription').value = '';
+            document.getElementById('companyWebsite').value = '';
+            document.getElementById('companySocial').value = '';
+            document.getElementById('bidAmount').value = '';
+            document.getElementById('logoUpload').value = '';
+            document.getElementById('logoPreview').style.display = 'none';
+            document.getElementById('uploadText').textContent = '📁 Haz clic para subir tu logo';
+            uploadedLogo = null;
+            
+            document.getElementById('bidModal').style.display = 'block';
+        }
+
+        // Función para cerrar el modal
+        function closeBidModal() {
+            document.getElementById('bidModal').style.display = 'none';
+            selectedPosition = null;
+        }
+
+        // Función para manejar la carga del logo
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedLogo = e.target.result;
+                    const preview = document.getElementById('logoPreview');
+                    preview.src = uploadedLogo;
+                    preview.style.display = 'block';
+                    document.getElementById('uploadText').textContent = `✅ ${file.name}`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Función para enviar el formulario de puja
+        function submitBidForm(event) {
+            event.preventDefault();
+            
+            const formData = {
+                position: selectedPosition,
+                companyName: document.getElementById('companyName').value,
+                email: document.getElementById('companyEmail').value,
+                phone: document.getElementById('companyPhone').value,
+                description: document.getElementById('companyDescription').value,
+                website: document.getElementById('companyWebsite').value,
+                social: document.getElementById('companySocial').value,
+                logo: uploadedLogo,
+                bidAmount: parseInt(document.getElementById('bidAmount').value),
+                category: currentCategory
+            };
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Procesando pago...';
+            
+            processMercadoPagoPayment(formData);
+        }
+
+        // Función para procesar pago con MercadoPago
+        async function processMercadoPagoPayment(formData) {
+            try {
+                console.log('Datos del formulario:', formData);
+                
+                setTimeout(() => {
+                    const newCompany = {
+                        position: formData.position,
+                        name: formData.companyName,
+                        category: getCategoryName(formData.category),
+                        logo: formData.companyName.substring(0, 2).toUpperCase(),
+                        logoColor: '#1F3D2B',
+                        logoUrl: formData.logo,
+                        description: formData.description,
+                        website: formData.website,
+                        social: formData.social,
+                        sponsored: true,
+                        verified: true
+                    };
+                    
+                    const index = currentCompanies.findIndex(c => c.position === formData.position);
+                    if (index !== -1) {
+                        currentCompanies[index] = newCompany;
+                    }
+                    
+                    closeBidModal();
+                    
+                    const notification = document.getElementById('notification');
+                    notification.textContent = `✅ ¡Pago exitoso! ${formData.companyName} ahora ocupa el puesto #${formData.position}`;
+                    notification.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 5000);
+                    
+                    renderPage();
+                    
+                    const submitBtn = document.getElementById('submitBtn');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Confirmar y Pagar con MercadoPago';
+                    
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error en el pago:', error);
+                alert('Hubo un error al procesar el pago. Por favor, intenta nuevamente.');
+                
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirmar y Pagar con MercadoPago';
+            }
+        }
+
+        // Función para obtener nombre de categoría
+        function getCategoryName(category) {
+            const names = {
+                'tech': 'Tecnología',
+                'gastro': 'Gastronomía',
+                'retail': 'Retail',
+                'services': 'Servicios',
+                'health': 'Salud',
+                'streamers': 'Streamer',
+                'all': 'General'
+            };
+            return names[category] || 'General';
+        }
+
+        // Cerrar modal si se hace clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('bidModal');
+            if (event.target === modal) {
+                closeBidModal();
+            }
+        }
+
+        // Manejar navegación con botones atrás/adelante
+        window.addEventListener('popstate', function() {
+            const hash = window.location.hash.replace('#', '');
+            const validCategories = ['all', 'tech', 'gastro', 'retail', 'services', 'health', 'streamers'];
+            if (validCategories.includes(hash)) {
+                navigateTo(hash);
+            } else {
+                navigateTo('all');
+            }
+        });
+
+        // Inicializar la página
+        navigateTo('all');
+    </script>
+</body>
+</html>
