@@ -1,6 +1,7 @@
 import type { RankingParticipant } from "@/types/ranking";
+import { KG_PER_DONATION_UNIT } from "@/config/finance";
 
-export function calculateTreesToNextPosition(
+export function calculateUnitsToNextPosition(
   participant: RankingParticipant,
   ranking: RankingParticipant[],
 ): number | null {
@@ -11,6 +12,6 @@ export function calculateTreesToNextPosition(
   );
 
   return nextParticipant
-    ? Math.max(nextParticipant.treesFunded - participant.treesFunded + 1, 0)
+    ? Math.max(nextParticipant.impactUnits - participant.impactUnits + KG_PER_DONATION_UNIT, 0)
     : null;
 }

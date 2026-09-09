@@ -1,5 +1,5 @@
 export type RankingPeriod = "historical" | "month" | "today";
-export type ParticipantCategory = "Streamer" | "Creador" | "Comunidad";
+export type ParticipantCategory = "Streamer" | "Creador" | "Comunidad" | "Empresa";
 
 export interface Participant {
   id: string;
@@ -13,9 +13,9 @@ export interface Participant {
 
 export interface RankingEntry extends Participant {
   position: number;
-  treesFunded: number;
+  impactUnits: number;
   contributors: number;
-  recentTrees: number;
+  recentImpactUnits: number;
 }
 
 export type RankingParticipant = RankingEntry;

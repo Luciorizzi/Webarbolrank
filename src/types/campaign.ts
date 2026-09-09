@@ -16,9 +16,10 @@ export interface Campaign {
   ngoName: string;
   goalAmount: number;
   raisedAmount: number;
-  treeGoal: number;
+  impactGoal: number;
   status: CampaignStatus;
-  plantingDate?: string;
+  activityDate?: string;
+  deliveryDate?: string;
   excerpt: string;
   description: string;
   publishedAt: string;

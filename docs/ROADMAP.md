@@ -1,19 +1,22 @@
 # Roadmap
 
-- [x] 1. Bootstrap y sistema visual
-- [x] 2. Componentización completa e interacción frontend
-- [ ] 3. Supabase y modelo de datos
-- [ ] 4. Ranking real
-- [ ] 5. Perfiles públicos
-- [ ] 6. Flujo de donación
-- [ ] 7. Mercado Pago
-- [ ] 8. Webhooks e idempotencia
-- [ ] 9. Batallas
-- [ ] 10. Impacto y transparencia
-- [ ] 11. Admin
-- [ ] 12. Seguridad
-- [ ] 13. SEO y Open Graph
-- [ ] 14. Analytics
-- [ ] 15. Deploy a producción
+El nombre público vigente del producto es KILO y su tagline es “Competí. Sumá kilos. Generá impacto.”
 
-Las etapas 1 y 2 están completadas: base ejecutable, sistema visual, ranking interactivo, perfiles mock, flujo frontend de donación y Novedades. La siguiente etapa es Supabase y el modelo de datos real.
+- [x] Bootstrap y sistema visual
+- [x] Componentización e interacción frontend
+- [x] Supabase, RLS, seed y lecturas reales
+- [x] Ranking y perfiles públicos
+- [x] Separación Participant / Donor / Donation
+- [x] Checkout Pro Mercado Pago TEST
+- [x] Webhook firmado e idempotente
+- [x] Pivot a alimentación de perros con dominio `impact_units`
+- [ ] Definir equivalencia verificable de la unidad (duración, kilos o raciones)
+- [ ] Sustituir campañas ficticias por alianzas verificadas
+- [ ] Batallas
+- [ ] Panel administrativo y autenticación
+- [ ] Storage y evidencias reales
+- [ ] SEO y Open Graph ampliados
+- [ ] Analytics
+- [ ] Preparación y auditoría previa a producción
+
+La métrica pública validada es kilogramo de alimento aportado, con conversión centralizada y progreso por milestones. El siguiente trabajo de producto debe validar los procesos de selección y rendición de organizaciones. Mercado Pago permanece exclusivamente en TEST hasta una etapa futura expresamente aprobada.

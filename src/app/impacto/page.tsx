@@ -1,2 +1,2 @@
 import { PlaceholderPage } from "@/components/common/PlaceholderPage";
-export default function Page() { return <PlaceholderPage eyebrow="Impacto" title="Del ranking al territorio" description="Esta sección documentará el avance desde árboles financiados hasta árboles efectivamente plantados y verificados." />; }
+export default function Page() { return <PlaceholderPage eyebrow="Impacto" title="Del ranking a los refugios" description="Esta sección documentará cómo los aportes confirmados se convierten en alimento entregado y resultados verificables." />; }

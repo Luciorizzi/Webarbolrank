@@ -1,30 +1,31 @@
-# Plantados
+# KILO
 
-Base web para una plataforma de competencia social que financia árboles mediante comunidades, creadores y streamers.
+KILO es una plataforma web de competencia social que financia alimento para perros de refugios y organizaciones mediante personas, comunidades, empresas y creadores.
+
+**Competí. Sumá kilos. Generá impacto.**
 
 ## Desarrollo
 
-Requiere Node.js 20.9 o superior.
+Requiere Node.js 20.9 o superior, Supabase CLI y credenciales TEST de Mercado Pago.
 
-```bash
+```powershell
 npm install
+npx supabase start
+npx supabase db reset
+Copy-Item .env.example .env.local
 npm run dev
 ```
 
-Abrir `http://localhost:3000`.
+Abrir `http://localhost:3000`. Las campañas, organizaciones y evidencias del seed son datos ficticios de desarrollo; no deben utilizarse como información pública real.
 
 ## Verificaciones
 
-```bash
+```powershell
 npm run typecheck
 npm run lint
 npm run build
 ```
 
-## Alcance actual
+La aplicación incluye ranking calculado desde donaciones aprobadas, perfiles públicos, donantes separados de participantes, donación general o por participante, Checkout Pro TEST con webhook idempotente y campañas de transparencia operativa.
 
-La aplicación contiene una home responsive, rankings mock por período, filtros, perfiles públicos, selección de participante, resumen de donación y campañas de Novedades. No procesa pagos, no persiste datos y no está conectada a Supabase.
-
-El prototipo HTML original se conserva en `legacy/index.html` únicamente como referencia visual.
-
-Más contexto en [`docs/PRODUCT.md`](docs/PRODUCT.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) y [`docs/ROADMAP.md`](docs/ROADMAP.md).
+El dominio usa `impact_units` como unidad genérica y centraliza su precio y etiqueta pública. Más contexto en [`docs/PRODUCT.md`](docs/PRODUCT.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/DATABASE.md`](docs/DATABASE.md), [`docs/PAYMENTS.md`](docs/PAYMENTS.md) y [`docs/ROADMAP.md`](docs/ROADMAP.md).

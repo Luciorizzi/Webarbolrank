@@ -9,12 +9,12 @@ export interface Donation {
   donorName: string | null;
   anonymous: boolean;
   participantSlug: string | null;
-  trees: number;
+  impactUnits: number;
   amount: number;
   createdAt: string;
 }
 
 export interface DonorRankingEntry {
   donorName: string;
-  trees: number;
+  impactUnits: number;
 }

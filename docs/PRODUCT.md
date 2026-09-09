@@ -1,31 +1,27 @@
 # Producto
 
-## Problema
+## Propuesta
 
-Las donaciones ambientales suelen ser actos aislados, con poca identidad comunitaria y escasa visibilidad del progreso. Plantados propone una competencia social fácil de entender: **¿quién financió más árboles?**
+KILO es una plataforma de competencia social orientada a financiar alimento para perros de refugios y organizaciones. Creadores, streamers, personas, comunidades y empresas compiten públicamente por generar más impacto.
 
-## Ranking
+Su tagline es: **Competí. Sumá kilos. Generá impacto.**
 
-Creadores, streamers, personas, comunidades y, más adelante, empresas pueden tener un perfil. Los árboles financiados en apoyo de cada participante determinan su posición. El ranking convierte la participación colectiva en una señal pública y comparable.
+La pregunta central es: **¿quién sumó más kilos?** Cada aporte confirmado suma kilogramos de alimento al participante elegido; una donación general financia el mismo objetivo sin alterar el ranking de participantes.
 
-## Árbol financiado y precio final
+## Unidad de impacto y precio final
 
-La unidad del producto es un árbol financiado. **Un árbol cuesta ARS 5.000 finales para el usuario.** Cinco árboles cuestan ARS 25.000 y diez cuestan ARS 50.000. No se agregan comisiones ni costos al checkout.
+La interfaz presenta kilogramos de alimento aportados, mientras el dominio conserva el nombre genérico `impact_units`. En este producto, `impact_units` representa kg. La equivalencia está centralizada con `KG_PER_DONATION_UNIT`, de modo que precio y conversión puedan cambiar sin acoplar componentes, ranking o Mercado Pago.
 
-El importe seleccionado es siempre el total final y no incorpora cargos adicionales al continuar. Aproximadamente el 10% de lo recaudado sostiene la operación, mantenimiento, desarrollo, administración, logística y otros gastos necesarios de la plataforma; no se publica un desglose fijo por árbol.
+Una unidad de donación cuesta inicialmente ARS 5.000 finales y equivale a 1 kg. No se agregan comisiones ni cargos al continuar. Aproximadamente el 10% de lo recaudado sostiene la operación, coordinación, logística, desarrollo y mantenimiento de la plataforma; este dato se integra de forma secundaria en Cómo funciona y no se desglosa durante el checkout.
 
-## Flujo de donación
+Los logros se derivan de la cantidad de impacto mediante una configuración central. No se persisten badges que puedan calcularse. Cada participante muestra progreso hacia su próximo umbral y su perfil conserva el historial completo de logros obtenidos.
 
-El usuario puede elegir un participante desde el ranking o realizar una donación general, identificarse con nombre o alias —o donar de forma anónima—, seleccionar entre 1 y 1.000 árboles y revisar un resumen antes de continuar. La confirmación de pagos todavía no está implementada; cuando exista, será el evento que sume árboles al ranking.
+## Participantes, donantes y campañas
 
-## Actores
+`Participant` representa a quien compite; `Donor`, a la persona que aporta; `Donation`, al aporte. Son entidades separadas. El donante puede usar un alias o aparecer como Anónimo.
 
-- **Participantes:** streamers, creadores o comunidades que compiten en el ranking. Un participante no representa a quien paga una donación.
-- **Donantes:** personas que realizan aportes. Pueden identificarse con nombre o alias, o aparecer públicamente como anónimas.
-- **Donaciones:** registran donante, anonimato, cantidad, monto y, opcionalmente, el participante apoyado. Una donación general no tiene participante asociado.
-- **Comunidades:** grupos que coordinan, difunden y acumulan impacto alrededor de un participante.
-- **Operación:** plataforma y aliados responsables de convertir fondos en plantación verificable.
+Novedades concentra la transparencia operativa: campañas, refugios u organizaciones, ubicaciones, objetivos en kg, montos, alimento, fechas, cronología y evidencia. `impact_goal` es la única meta de alimento de cada campaña. Las organizaciones y campañas del seed están identificadas como datos ficticios de desarrollo y no deben presentarse como casos reales.
 
-## Transparencia
+## Confirmación
 
-La transparencia financiera comunica el precio final y el porcentaje operativo aproximado sin presentar una distribución fija. La transparencia operativa vive en Novedades: campañas, metas, montos, organizaciones, ubicaciones, fechas, actualizaciones y evidencia. En esta etapa todos esos contenidos son mocks explícitos; todavía no existen transacciones ni métricas reales.
+El frontend solo envía `impactUnits`. El servidor calcula el importe, crea una donación `pending` y genera Checkout Pro TEST. Solo un webhook firmado y verificado contra la API de Mercado Pago puede cambiar su estado. El ranking suma exclusivamente donaciones `approved`.
