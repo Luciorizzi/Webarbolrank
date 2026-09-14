@@ -1,0 +1,7 @@
+import { field } from "./AdminUI";
+import { SubmitButton } from "./SubmitButton";
+import type { Database } from "@/types/database";
+type P = Database["public"]["Tables"]["participants"]["Row"];
+type C = Database["public"]["Tables"]["categories"]["Row"];
+export function ParticipantForm({ action, participant, categories }: { action: (form: FormData) => void | Promise<void>; participant?: P | null; categories: C[] }) { return <form action={action} className="grid gap-4 rounded-xl border border-white/10 bg-white/[.03] p-5 sm:grid-cols-2"><label className="text-sm">Nombre<input className={`${field} mt-1`} name="name" required maxLength={120} defaultValue={participant?.name} /></label><label className="text-sm">Slug<input className={`${field} mt-1`} name="slug" required maxLength={100} defaultValue={participant?.slug} /></label><label className="text-sm">Categoría<select className={`${field} mt-1`} name="category_id" defaultValue={participant?.category_id ?? ""}><option value="">Sin categoría</option>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><label className="text-sm">Avatar URL<input className={`${field} mt-1`} name="avatar_url" type="url" defaultValue={participant?.avatar_url ?? ""} /></label><label className="flex items-center gap-2 text-sm"><input name="active" type="checkbox" defaultChecked={participant?.active ?? true} /> Activo</label><div className="sm:col-span-2"><SubmitButton>{participant ? "Guardar cambios" : "Crear participante"}</SubmitButton></div></form>; }
+
