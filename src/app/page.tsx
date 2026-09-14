@@ -46,13 +46,13 @@ export default async function Home({
           <span className="size-2 animate-pulse rounded-full bg-amber-400" />
           Ranking de impacto
         </div>
-        <h1 className="mx-auto max-w-4xl font-display text-5xl font-black uppercase leading-[0.94] tracking-[-0.05em] text-white sm:text-7xl lg:text-8xl">
+        <h1 className="mx-auto max-w-4xl font-display text-4xl font-black uppercase leading-[0.94] tracking-[-0.05em] text-white sm:text-7xl lg:text-8xl">
           ¿Quién sumó más <span className="text-amber-400">kilos?</span>
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">
           Personas, comunidades y empresas compiten por sumar kilos de alimento y generar impacto. Llevá a tu comunidad a la cima mientras ayudamos a refugios y organizaciones de todo el país.
         </p>
-        <div className="mx-auto mt-12 grid w-full max-w-2xl grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/8 bg-white/[0.025] px-1 py-5">
+        <div className="mx-auto mt-12 grid w-full max-w-2xl grid-cols-1 divide-y divide-white/10 rounded-2xl border border-white/8 bg-white/[0.025] px-1 py-2 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:py-5">
           <div className="min-w-0 px-2 sm:px-10">
             <Stat value={formatImpactKg(totalImpactUnits)} label="de alimento aportados" />
           </div>

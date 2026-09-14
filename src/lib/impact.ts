@@ -2,33 +2,37 @@ import { IMPACT_MILESTONES, type ImpactMilestone } from "@/config/milestones";
 import { normalizeImpactUnits } from "@/config/finance";
 
 export interface ImpactProgress {
-  current: number;
+  currentKg: number;
   earned: readonly ImpactMilestone[];
-  currentMilestone: ImpactMilestone | null;
+  previousMilestone: ImpactMilestone | null;
   nextMilestone: ImpactMilestone | null;
-  remaining: number;
+  remainingKg: number;
   progressPercent: number;
-  progressStart: number;
 }
 
-export function getImpactProgress(value: unknown): ImpactProgress {
-  const current = normalizeImpactUnits(value);
-  const earned = IMPACT_MILESTONES.filter((milestone) => current >= milestone.threshold);
-  const currentMilestone = earned.at(-1) ?? null;
-  const nextMilestone = IMPACT_MILESTONES.find((milestone) => current < milestone.threshold) ?? null;
-  const progressStart = currentMilestone?.threshold ?? 0;
+export function getMilestoneProgress(value: unknown): ImpactProgress {
+  const currentKg = normalizeImpactUnits(value);
+  const earned = IMPACT_MILESTONES.filter((milestone) => currentKg >= milestone.threshold);
+  const previousMilestone = earned.at(-1) ?? null;
+  const nextMilestone = IMPACT_MILESTONES.find((milestone) => currentKg < milestone.threshold) ?? null;
+  const progressStart = previousMilestone?.threshold ?? 0;
   const range = nextMilestone ? nextMilestone.threshold - progressStart : 0;
   const progressPercent = nextMilestone && range > 0
-    ? Math.min(100, Math.max(0, ((current - progressStart) / range) * 100))
+    ? Math.min(100, Math.max(0, ((currentKg - progressStart) / range) * 100))
     : 100;
 
   return {
-    current,
+    currentKg,
     earned,
-    currentMilestone,
+    previousMilestone,
     nextMilestone,
-    remaining: nextMilestone ? Math.max(0, nextMilestone.threshold - current) : 0,
+    remainingKg: nextMilestone ? Math.max(0, nextMilestone.threshold - currentKg) : 0,
     progressPercent,
-    progressStart,
   };
+}
+
+export function formatMilestoneBadge(threshold: number): string {
+  if (threshold < 1_000) return `${threshold} KG`;
+  const thousands = threshold / 1_000;
+  return `${Number.isInteger(thousands) ? thousands : thousands.toFixed(1)}K KG`;
 }

@@ -21,6 +21,7 @@ export default async function Page({
   return (
     <main className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
       <CampaignStatusBadge status={campaign.status} />
+      {campaign.isDemo && <p className="mt-4 w-fit rounded-full border border-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-zinc-400">Datos ficticios de demostración</p>}
       <h1 className="mt-5 max-w-4xl font-display text-5xl font-black uppercase text-white sm:text-7xl">
         {campaign.title}
       </h1>

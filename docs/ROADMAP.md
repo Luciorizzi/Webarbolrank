@@ -10,7 +10,7 @@ El nombre público vigente del producto es KILO y su tagline es “Competí. Sum
 - [x] Checkout Pro Mercado Pago TEST
 - [x] Webhook firmado e idempotente
 - [x] Pivot a alimentación de perros con dominio `impact_units`
-- [ ] Definir equivalencia verificable de la unidad (duración, kilos o raciones)
+- [x] Centralizar la equivalencia verificable: una unidad de donación equivale a 1 kg
 - [ ] Sustituir campañas ficticias por alianzas verificadas
 - [ ] Batallas
 - [ ] Panel administrativo y autenticación

@@ -1,6 +1,7 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { InvalidWebhookSignatureError, MPNotFoundError, WebhookSignatureValidator } from "mercadopago";
-import { createPaymentClient } from "@/lib/mercadopago/client";
+import { createPaymentClient, getAuthenticatedMercadoPagoUser } from "@/lib/mercadopago/client";
 import { amountsMatch, mapMercadoPagoStatus, resolveDonationStatus } from "@/lib/mercadopago/payment";
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/server";
 
@@ -26,7 +27,69 @@ function readSignatureInputs(request: NextRequest) {
   };
 }
 
-function logSignatureDiagnostics(dataId: string | null, xSignature: string | null, xRequestId: string | null, signatureValid: boolean) {
+function getMercadoPagoEnvironment(): "test" | "production" {
+  const environment = process.env.MERCADOPAGO_ENV?.trim();
+  if (environment !== "test" && environment !== "production") {
+    throw new Error("MERCADOPAGO_ENV debe ser test o production.");
+  }
+  return environment;
+}
+
+function getAllowedTestBuyerIds(): Set<string> {
+  const configuredIds = process.env.MERCADOPAGO_TEST_BUYER_IDS?.split(",").map((id) => id.trim()).filter(Boolean) ?? [];
+  if (configuredIds.length === 0 || configuredIds.some((id) => !/^\d+$/.test(id))) {
+    throw new Error("MERCADOPAGO_TEST_BUYER_IDS debe contener al menos un ID numérico válido.");
+  }
+  return new Set(configuredIds);
+}
+
+function parseSignatureHeader(xSignature: string | null) {
+  let ts: string | null = null;
+  let v1: string | null = null;
+
+  for (const part of xSignature?.split(",") ?? []) {
+    const separatorIndex = part.indexOf("=");
+    if (separatorIndex === -1) continue;
+
+    const key = part.slice(0, separatorIndex).trim().toLowerCase();
+    const value = part.slice(separatorIndex + 1).trim();
+    if (!value) continue;
+
+    if (key === "ts") ts = value;
+    if (key === "v1") v1 = value;
+  }
+
+  return { ts, v1 };
+}
+
+function buildManualSignatureDiagnostics(
+  dataId: string | null,
+  xSignature: string | null,
+  xRequestId: string | null,
+  secret: string,
+) {
+  const { ts, v1 } = parseSignatureHeader(xSignature);
+  const manifest = ts
+    ? `${dataId ? `id:${dataId};` : ""}${xRequestId ? `request-id:${xRequestId};` : ""}ts:${ts};`
+    : null;
+  const computedHash = manifest ? createHmac("sha256", secret).update(manifest).digest("hex") : null;
+  const manualSignatureValid = Boolean(
+    computedHash &&
+      v1 &&
+      Buffer.byteLength(computedHash) === Buffer.byteLength(v1) &&
+      timingSafeEqual(Buffer.from(computedHash), Buffer.from(v1)),
+  );
+
+  return { manifest, manualSignatureValid, ts, v1Length: v1?.length ?? 0 };
+}
+
+function logSignatureDiagnostics(
+  dataId: string | null,
+  xSignature: string | null,
+  xRequestId: string | null,
+  sdkSignatureValid: boolean,
+  manualDiagnostics: ReturnType<typeof buildManualSignatureDiagnostics> | null,
+) {
   logDevelopmentWebhook("diagnóstico de firma", {
     notificationSource: "modern-payment",
     dataId,
@@ -35,8 +98,13 @@ function logSignatureDiagnostics(dataId: string | null, xSignature: string | nul
     hasSignature: Boolean(xSignature),
     hasRequestId: Boolean(xRequestId),
     xSignatureLength: xSignature?.length ?? 0,
-    xRequestIdLength: xRequestId?.length ?? 0,
-    signatureValid,
+    requestId: xRequestId,
+    requestIdLength: xRequestId?.length ?? 0,
+    ts: manualDiagnostics?.ts ?? null,
+    v1Length: manualDiagnostics?.v1Length ?? 0,
+    manifest: manualDiagnostics?.manifest ?? null,
+    sdkSignatureValid,
+    manualSignatureValid: manualDiagnostics?.manualSignatureValid ?? null,
   });
 }
 
@@ -69,6 +137,11 @@ export async function POST(request: NextRequest) {
     return webhookResponse({ error: "Webhook no configurado." }, 503, { type: eventType, dataId });
   }
 
+  const manualDiagnostics =
+    process.env.NODE_ENV === "development"
+      ? buildManualSignatureDiagnostics(dataId, xSignature, xRequestId, webhookSecret)
+      : null;
+
   try {
     WebhookSignatureValidator.validate({
       xSignature,
@@ -76,11 +149,11 @@ export async function POST(request: NextRequest) {
       dataId,
       secret: webhookSecret,
     });
-    logSignatureDiagnostics(dataId, xSignature, xRequestId, true);
+    logSignatureDiagnostics(dataId, xSignature, xRequestId, true, manualDiagnostics);
     logDevelopmentWebhook("firma validada", { signatureValid: true, dataId });
   } catch (error) {
     const reason = error instanceof InvalidWebhookSignatureError ? error.reason : "unknown";
-    logSignatureDiagnostics(dataId, xSignature, xRequestId, false);
+    logSignatureDiagnostics(dataId, xSignature, xRequestId, false, manualDiagnostics);
     logDevelopmentWebhook("firma rechazada", { signatureValid: false, reason, dataId });
     return webhookResponse({ error: "Firma inválida." }, 401, { type: eventType, dataId, signatureValid: false });
   }
@@ -99,9 +172,37 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    if (payment.live_mode === true) {
-      console.error("Se rechazó un pago productivo en una integración configurada exclusivamente para TEST.");
-      return webhookResponse({ error: "Solo se aceptan pagos de TEST." }, 400, { paymentId, mercadoPagoStatus: payment.status });
+    const mercadoPagoEnvironment = getMercadoPagoEnvironment();
+    const authenticatedUser = await getAuthenticatedMercadoPagoUser();
+    const collectorIdMatches = String(payment.collector_id ?? "") === String(authenticatedUser.id);
+    const payerId = payment.payer?.id === undefined || payment.payer.id === null ? null : String(payment.payer.id);
+    const payerIdAllowed = mercadoPagoEnvironment === "production" ? true : Boolean(payerId && getAllowedTestBuyerIds().has(payerId));
+
+    logDevelopmentWebhook("contexto de ambiente validado", {
+      paymentId,
+      paymentStatus: payment.status,
+      liveMode: payment.live_mode,
+      collectorId: payment.collector_id ?? null,
+      authenticatedUserId: authenticatedUser.id,
+      authenticatedUserIsTest: authenticatedUser.isTestUser,
+      payerId,
+      payerIdAllowed,
+    });
+
+    if (!collectorIdMatches) {
+      return webhookResponse({ error: "El pago pertenece a otro vendedor." }, 403, {
+        paymentId,
+        collectorId: payment.collector_id ?? null,
+        authenticatedUserId: authenticatedUser.id,
+      });
+    }
+
+    if (mercadoPagoEnvironment === "test" && (!authenticatedUser.isTestUser || !payerIdAllowed)) {
+      return webhookResponse({ error: "El pago no pertenece al contexto TEST permitido." }, 403, {
+        paymentId,
+        authenticatedUserIsTest: authenticatedUser.isTestUser,
+        payerIdAllowed,
+      });
     }
 
     const donationId = payment.external_reference;
@@ -119,9 +220,19 @@ export async function POST(request: NextRequest) {
     });
     if (!donation) return webhookResponse({ error: "No existe la donación asociada." }, 404, { paymentId, externalReference: donationId, donationFound: false });
 
-    if (payment.currency_id !== "ARS" || !amountsMatch(donation.amount, payment.transaction_amount)) {
+    const amountMatch = amountsMatch(donation.amount, payment.transaction_amount);
+    const currencyMatch = payment.currency_id === "ARS";
+    if (!currencyMatch || !amountMatch) {
       console.error("Pago de Mercado Pago rechazado por monto o moneda inconsistentes.", { donationId, paymentId });
-      return webhookResponse({ error: "El pago no coincide con la donación." }, 400, { paymentId, externalReference: donationId, donationFound: true, previousStatus: donation.status });
+      return webhookResponse({ error: "El pago no coincide con la donación." }, 400, {
+        paymentId,
+        externalReference: donationId,
+        donationFound: true,
+        externalReferenceMatch: true,
+        amountMatch,
+        currencyMatch,
+        previousStatus: donation.status,
+      });
     }
 
     const mappedStatus = mapMercadoPagoStatus(payment.status);
@@ -131,6 +242,20 @@ export async function POST(request: NextRequest) {
     }
 
     const nextStatus = resolveDonationStatus(donation.status, mappedStatus);
+    logDevelopmentWebhook("pago y donación validados", {
+      paymentId,
+      paymentStatus: payment.status,
+      liveMode: payment.live_mode,
+      collectorId: payment.collector_id ?? null,
+      authenticatedUserId: authenticatedUser.id,
+      authenticatedUserIsTest: authenticatedUser.isTestUser,
+      payerIdAllowed,
+      externalReferenceMatch: true,
+      amountMatch,
+      currencyMatch,
+      previousDonationStatus: donation.status,
+      newDonationStatus: nextStatus,
+    });
     if (donation.status === nextStatus && donation.payment_reference === paymentId) {
       logDevelopmentWebhook("donación ya procesada", {
         paymentId,

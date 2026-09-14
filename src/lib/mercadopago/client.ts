@@ -1,5 +1,12 @@
 import "server-only";
-import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
+import { MercadoPagoConfig, Payment, Preference, User } from "mercadopago";
+
+type AuthenticatedMercadoPagoUser = {
+  id: number;
+  isTestUser: boolean;
+};
+
+let authenticatedUserRequest: Promise<AuthenticatedMercadoPagoUser> | null = null;
 
 function getAccessToken(): string {
   const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim();
@@ -22,6 +29,20 @@ export function createPreferenceClient(): Preference {
 
 export function createPaymentClient(): Payment {
   return new Payment(createConfig());
+}
+
+export async function getAuthenticatedMercadoPagoUser(): Promise<AuthenticatedMercadoPagoUser> {
+  if (!authenticatedUserRequest) {
+    authenticatedUserRequest = new User(createConfig()).get().then((user) => {
+      if (typeof user.id !== "number") throw new Error("Mercado Pago no devolvió el usuario autenticado.");
+      return { id: user.id, isTestUser: user.tags?.includes("test_user") ?? false };
+    });
+    authenticatedUserRequest.catch(() => {
+      authenticatedUserRequest = null;
+    });
+  }
+
+  return authenticatedUserRequest;
 }
 
 export function getPublicAppUrl(): string {

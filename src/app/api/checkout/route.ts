@@ -31,7 +31,7 @@ function getMercadoPagoEnvironment(): MercadoPagoEnvironment {
 
 function logPreferenceResult(preference: PreferenceDiagnostics & {
   id?: string;
-}, externalReference: string, mercadoPagoEnvironment: MercadoPagoEnvironment, checkoutUrlType: "sandbox_init_point" | "init_point") {
+}, externalReference: string, mercadoPagoEnvironment: MercadoPagoEnvironment, checkoutUrlType: "init_point") {
   if (process.env.NODE_ENV !== "development") return;
 
   console.info("Mercado Pago preference created:", {
@@ -116,8 +116,8 @@ export async function POST(request: Request) {
       requestOptions: { idempotencyKey: donation.id },
     });
     if (!preference.id) throw new Error("Mercado Pago no devolvió un identificador de preferencia.");
-    const checkoutUrlType = mercadoPagoEnvironment === "test" ? "sandbox_init_point" : "init_point";
-    const checkoutUrl = preference[checkoutUrlType];
+    const checkoutUrlType = "init_point";
+    const checkoutUrl = preference.init_point;
     if (!checkoutUrl) throw new Error(`Mercado Pago no devolvió ${checkoutUrlType} para el ambiente ${mercadoPagoEnvironment}.`);
     logPreferenceResult(preference, donation.id, mercadoPagoEnvironment, checkoutUrlType);
 

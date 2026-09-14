@@ -25,4 +25,5 @@ export interface Campaign {
   publishedAt: string;
   updates: CampaignUpdate[];
   evidence: string[];
+  isDemo: boolean;
 }

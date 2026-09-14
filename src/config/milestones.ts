@@ -1,4 +1,4 @@
-export type ImpactMilestoneTier = "base" | "drive" | "ally" | "reference" | "leader" | "elite" | "legend";
+export type ImpactMilestoneTier = "base" | "drive" | "ally" | "reference" | "leader" | "elite";
 
 export interface ImpactMilestone {
   id: string;
@@ -15,5 +15,4 @@ export const IMPACT_MILESTONES: readonly ImpactMilestone[] = [
   { id: "reference", threshold: 2_500, name: "Referente", description: "Movilizó 2.500 kg de impacto colectivo.", tier: "reference" },
   { id: "leader", threshold: 5_000, name: "Líder de impacto", description: "Alcanzó 5.000 kg de alimento aportado.", tier: "leader" },
   { id: "elite", threshold: 10_000, name: "Élite solidaria", description: "Superó los 10.000 kg aportados.", tier: "elite" },
-  { id: "legend", threshold: 25_000, name: "Leyenda", description: "Llegó a 25.000 kg de impacto verificable.", tier: "legend" },
 ] as const;

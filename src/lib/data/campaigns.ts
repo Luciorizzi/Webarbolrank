@@ -23,6 +23,7 @@ function mapCampaign(row: CampaignWithRelations): Campaign {
     description: row.description ?? row.excerpt ?? "Información de campaña.", publishedAt: row.published_at ?? row.created_at,
     updates: row.campaign_updates.sort((a, b) => a.event_date.localeCompare(b.event_date)).map((update) => ({ id: update.id, campaignId: update.campaign_id, date: update.event_date, title: update.title, content: update.content ?? "" })),
     evidence: row.campaign_evidence.map((evidence) => evidence.label),
+    isDemo: row.ngo_name?.toLocaleLowerCase("es").includes("dato ficticio de desarrollo") ?? false,
   };
 }
 

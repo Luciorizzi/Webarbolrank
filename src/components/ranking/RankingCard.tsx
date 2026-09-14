@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { formatImpactKg } from "@/config/finance";
-import { getImpactProgress } from "@/lib/impact";
+import { getMilestoneProgress } from "@/lib/impact";
 import { calculateUnitsToNextPosition } from "@/lib/ranking";
 import type { RankingParticipant } from "@/types/ranking";
 import { ImpactProgress } from "./ImpactProgress";
@@ -13,14 +13,14 @@ interface RankingCardProps { participant: RankingParticipant; ranking: RankingPa
 
 export function RankingCard({ participant, ranking, onSelect }: RankingCardProps) {
   const unitsToNext = calculateUnitsToNextPosition(participant, ranking);
-  const milestone = getImpactProgress(participant.impactUnits).currentMilestone;
+  const milestone = getMilestoneProgress(participant.impactUnits).previousMilestone;
   return (
-    <article className={`group relative grid gap-5 overflow-hidden rounded-3xl border p-5 transition sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-6 ${participant.position === 1 ? "border-amber-400/35 bg-amber-400/[0.07]" : "border-white/9 bg-white/[0.035] hover:border-white/16"}`}>
+    <article className={`group relative grid min-w-0 gap-5 overflow-hidden rounded-3xl border p-5 transition sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:p-6 ${participant.position === 1 ? "border-amber-400/35 bg-amber-400/[0.07]" : "border-white/9 bg-white/[0.035] hover:border-white/16"}`}>
       <div className="flex items-center gap-4">
         <span className="w-8 font-display text-xl font-bold text-zinc-500">#{participant.position}</span>
         <div className="grid size-14 place-items-center rounded-2xl border border-white/10 bg-gradient-to-br from-amber-300/20 to-orange-400/5 font-display font-bold text-amber-300">{participant.initials}</div>
       </div>
-      <div>
+      <div className="min-w-0">
         <div className="mb-1 flex items-center gap-2"><h3 className="font-display text-lg font-bold uppercase tracking-tight text-white">{participant.name}</h3>{participant.verified && <span className="grid size-4 place-items-center rounded-full bg-sky-400 text-[10px] font-bold text-sky-950" title="Verificado">✓</span>}</div>
         <p className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-zinc-500">{participant.category}</p>
         <p className="text-2xl font-bold text-white">{formatImpactKg(participant.impactUnits)} <span className="text-sm font-normal text-zinc-400">aportados</span></p>

@@ -9,7 +9,7 @@ import { getRecentDonations, getTopDonors } from "@/lib/data/donations";
 import { getParticipantBySlug, getParticipants } from "@/lib/data/participants";
 import { loadData } from "@/lib/data/result";
 import { calculateUnitsToNextPosition } from "@/lib/ranking";
-import { getImpactProgress } from "@/lib/impact";
+import { formatMilestoneBadge, getMilestoneProgress } from "@/lib/impact";
 const nf = new Intl.NumberFormat("es-AR");
 export const dynamic = "force-dynamic";
 export default async function Page({
@@ -34,17 +34,17 @@ export default async function Page({
   const previous = participants.find(
     (item) => item.position === participant.position - 1,
   );
-  const progress = getImpactProgress(participant.impactUnits);
+  const progress = getMilestoneProgress(participant.impactUnits);
   return (
     <main className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-      <section className="grid gap-8 rounded-[2rem] border border-white/9 bg-white/[0.03] p-6 sm:p-10 md:grid-cols-[auto_1fr_auto] md:items-center">
+      <section className="grid min-w-0 gap-8 overflow-hidden rounded-[2rem] border border-white/9 bg-white/[0.03] p-6 sm:p-10 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center">
         <div
           className="grid size-24 place-items-center rounded-3xl border border-amber-400/20 bg-amber-400/10 text-2xl font-bold text-amber-300"
           aria-label={`Avatar de ${participant.name}`}
         >
           {participant.initials}
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-sm uppercase tracking-wider text-zinc-500">
             #{participant.position} del ranking · {participant.category}
           </p>
@@ -89,7 +89,7 @@ export default async function Page({
         </div>
         <Link
           href={`/?participant=${participant.slug}#donar`}
-          className="rounded-full bg-amber-400 px-5 py-4 text-center text-xs font-bold uppercase text-amber-950"
+          className="min-w-0 rounded-full bg-amber-400 px-5 py-4 text-center text-xs font-bold uppercase text-amber-950"
         >
           Alimentar por {participant.name.split(" ")[0]}
         </Link>
@@ -97,7 +97,7 @@ export default async function Page({
       <section className="mt-8 rounded-3xl border border-white/9 bg-white/[0.025] p-6 sm:p-8">
         <p className="eyebrow">Logros</p>
         <h2 className="mt-3 font-display text-2xl font-bold uppercase text-white">Historial de impacto</h2>
-        {progress.earned.length ? <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{progress.earned.map((milestone) => <li key={milestone.id} className="rounded-2xl border border-amber-400/15 bg-amber-400/[0.045] p-4"><p className="text-xs font-bold uppercase tracking-[0.14em] text-amber-300">{formatImpactKg(milestone.threshold)}</p><h3 className="mt-2 font-bold text-white">{milestone.name}</h3><p className="mt-1 text-sm leading-6 text-zinc-500">{milestone.description}</p></li>)}</ul> : <p className="mt-5 text-sm text-zinc-500">Su primer logro se desbloquea al alcanzar 100 kg aportados.</p>}
+        {progress.earned.length ? <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{progress.earned.map((milestone) => <li key={milestone.id} className="rounded-2xl border border-amber-400/15 bg-amber-400/[0.045] p-4"><p className="inline-flex rounded-full border border-amber-400/20 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.14em] text-amber-300">{formatMilestoneBadge(milestone.threshold)}</p><h3 className="mt-3 font-bold text-white">{milestone.name}</h3><p className="mt-1 text-sm leading-6 text-zinc-500">{milestone.description}</p></li>)}</ul> : <p className="mt-5 text-sm text-zinc-500">Su primer logro se desbloquea al alcanzar 100 kg aportados.</p>}
       </section>
       <div className="mt-12 grid gap-8 md:grid-cols-2">
         <RecentDonations
