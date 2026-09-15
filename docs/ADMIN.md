@@ -23,3 +23,6 @@ delete from public.admin_users where user_id = 'UUID-DEL-USUARIO';
 
 No se almacenan contraseñas en tablas públicas. No existe una acción administrativa para cambiar el estado de una donación; ese estado sigue siendo propiedad exclusiva del webhook de Mercado Pago.
 
+## Imágenes de campañas
+
+Las portadas y evidencias fotográficas se guardan en el bucket público `campaign-images`. La lectura pública permite mostrarlas en Novedades, pero las escrituras requieren una sesión cuya membresía exista en `admin_users`. El panel valida JPG, PNG o WEBP con un máximo de 5 MB tanto antes de enviar como en el servidor; el bucket repite esos límites.

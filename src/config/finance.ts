@@ -7,6 +7,10 @@ export const IMPACT_UNIT_PLURAL = "kg";
 export const IMPACT_LABEL = "kg de alimento aportados";
 export const DONATION_UNIT_PRESETS = [1, 5, 10, 20] as const;
 
+export function calculateCampaignGoalAmount(impactKg: number): number {
+  return impactKg / KG_PER_DONATION_UNIT * DONATION_UNIT_PRICE;
+}
+
 const impactFormatter = new Intl.NumberFormat("es-AR", {
   maximumFractionDigits: 2,
 });

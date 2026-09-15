@@ -48,6 +48,10 @@ export function campaignStatus(value: string): CampaignStatusDb {
   if (!["fundraising", "goal_reached", "scheduled", "completed"].includes(value)) throw new Error("status: valor inválido.");
   return value as CampaignStatusDb;
 }
+export function validateCampaignDeliveryDate(status: CampaignStatusDb, deliveryDate: string | null) {
+  if (status === "completed" && !deliveryDate) throw new Error("Debés indicar la fecha de entrega para completar la campaña.");
+  return deliveryDate;
+}
 export function evidenceType(value: string): EvidenceType {
   if (!["photo", "receipt", "document", "external_link"].includes(value)) throw new Error("type: valor inválido.");
   return value as EvidenceType;

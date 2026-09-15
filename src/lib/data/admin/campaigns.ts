@@ -15,6 +15,12 @@ export async function getAdminCampaign(id: string) {
     db.from("campaign_evidence").select("*").eq("campaign_id", id).order("evidence_date", { ascending: false }),
   ]);
   if (error || updates.error || evidence.error) throw new Error("No se pudo cargar la campaña.");
-  return { campaign: data, updates: updates.data ?? [], evidence: evidence.data ?? [] };
+  const evidenceRows = evidence.data ?? [];
+  const images = evidenceRows.length
+    ? await db.from("campaign_evidence_images").select("*").in("evidence_id", evidenceRows.map((item) => item.id)).order("sort_order")
+    : { data: [], error: null };
+  if (images.error) throw new Error("No se pudieron cargar las imágenes de evidencia.");
+  const byEvidence = new Map<string, typeof images.data>();
+  for (const image of images.data ?? []) byEvidence.set(image.evidence_id, [...(byEvidence.get(image.evidence_id) ?? []), image]);
+  return { campaign: data, updates: updates.data ?? [], evidence: evidenceRows.map((item) => ({ ...item, images: byEvidence.get(item.id) ?? [] })) };
 }
-

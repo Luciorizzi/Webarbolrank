@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { DataConfigurationError } from "@/components/common/DataConfigurationError";
+import { ExpandableImage } from "@/components/images/ExpandableImage";
+import { EvidenceGallery } from "@/components/campaigns/EvidenceGallery";
 import { CampaignStatusBadge } from "@/components/campaigns/CampaignStatusBadge";
 import { CampaignTimeline } from "@/components/campaigns/CampaignTimeline";
 import { getCampaignBySlug } from "@/lib/data/campaigns";
@@ -28,6 +30,7 @@ export default async function Page({
       <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-400">
         {campaign.description}
       </p>
+      {campaign.coverImageUrl && <ExpandableImage src={campaign.coverImageUrl} alt={`imagen de ${campaign.title}`} className="mt-8 aspect-video w-full rounded-3xl" />}
       <section className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-white/8 bg-white/8 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Ubicación", campaign.location],
@@ -35,12 +38,7 @@ export default async function Page({
           ["Meta", formatARS(campaign.goalAmount)],
           ["Recaudado", formatARS(campaign.raisedAmount)],
           [campaign.status === "completed" ? "Alimento entregado" : "Meta de alimento", formatImpactKg(campaign.impactGoal)],
-          [
-            "Entrega",
-            campaign.deliveryDate
-              ? df.format(new Date(campaign.deliveryDate))
-              : "A confirmar",
-          ],
+          ...(campaign.deliveryDate ? [["Fecha de entrega", df.format(new Date(campaign.deliveryDate))]] : []),
         ].map(([label, value]) => (
           <div key={label} className="bg-[#100d0a] p-5">
             <p className="text-xs uppercase tracking-wider text-zinc-500">
@@ -61,18 +59,13 @@ export default async function Page({
           <h2 className="font-display text-3xl font-bold uppercase text-white">
             Evidencia
           </h2>
-          {campaign.evidence.length ? (
-            <ul className="mt-6 space-y-3">
-              {campaign.evidence.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-2xl border border-white/8 bg-white/[0.025] p-4 text-sm text-zinc-400"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          ) : (
+          {campaign.evidence.length ? <div className="mt-6 space-y-5">{campaign.evidence.map((item) => (
+            <article key={item.id} className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+              {item.date && <time dateTime={item.date} className="text-xs font-medium uppercase tracking-wider text-zinc-500">{df.format(new Date(item.date))}</time>}
+              <p className="mt-2 text-sm leading-6 text-zinc-300">{item.label}</p>
+              {item.type === "photo" ? <EvidenceGallery images={item.images} label={item.label} /> : item.url && <a href={item.url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-amber-300 hover:text-amber-200">Ver archivo →</a>}
+            </article>
+          ))}</div> : (
             <p className="mt-5 text-zinc-500">
               La campaña sigue abierta. La evidencia se publicará con cada
               actualización.

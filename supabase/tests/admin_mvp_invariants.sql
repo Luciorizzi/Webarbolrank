@@ -10,7 +10,8 @@ declare
 begin
   if to_regclass('public.admin_users') is null then raise exception 'admin_users missing'; end if;
   if not (select relrowsecurity from pg_class where oid = 'public.admin_users'::regclass) then raise exception 'admin_users RLS disabled'; end if;
-  if has_table_privilege('anon', 'public.admin_users', 'select') or has_table_privilege('authenticated', 'public.admin_users', 'select') then raise exception 'admin_users exposed'; end if;
+  if has_table_privilege('anon', 'public.admin_users', 'select') then raise exception 'admin_users exposed to anon'; end if;
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'admin_users' and policyname = 'Users can read their own admin membership') then raise exception 'admin membership self-read policy missing'; end if;
   if has_table_privilege('authenticated', 'public.donations', 'update') then raise exception 'authenticated may update donations'; end if;
 
   select coalesce(jsonb_agg(to_jsonb(r) order by r.rank_position), '[]') into before_ranking from public.get_ranking('historical') r;
@@ -35,4 +36,3 @@ begin
 end $$;
 
 rollback;
-

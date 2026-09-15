@@ -71,38 +71,39 @@ export default async function Home({
         rankings={rankings}
         participants={participants}
         initialParticipant={initialParticipant}
-      />
-      <section className="mx-auto grid max-w-6xl gap-8 px-5 pb-20 sm:px-8 md:grid-cols-2">
-        <RecentDonations donations={donations} participants={participants} />
-        <TopDonors donors={topDonors} />
-      </section>
-      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-        <div className="mb-9 flex items-end justify-between gap-5">
-          <div>
-            <p className="eyebrow">Transparencia operativa</p>
-            <h2 className="mt-3 font-display text-3xl font-bold uppercase text-white sm:text-4xl">
-              Últimas novedades
-            </h2>
+      >
+        <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mb-9 flex items-end justify-between gap-5">
+            <div>
+              <p className="eyebrow">Transparencia operativa</p>
+              <h2 className="mt-3 font-display text-3xl font-bold uppercase text-white sm:text-4xl">
+                Últimas novedades
+              </h2>
+            </div>
+            <Link
+              href="/novedades"
+              className="hidden text-sm font-bold text-amber-300 sm:block"
+            >
+              Ver todas las novedades
+            </Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {campaigns.slice(0, 3).map((campaign) => (
+              <CampaignCard key={campaign.id} campaign={campaign} />
+            ))}
           </div>
           <Link
             href="/novedades"
-            className="hidden text-sm font-bold text-amber-300 sm:block"
+            className="mt-6 inline-block text-sm font-bold text-amber-300 sm:hidden"
           >
-            Ver todas →
+            Ver todas las novedades →
           </Link>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {campaigns.slice(0, 3).map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
-          ))}
-        </div>
-        <Link
-          href="/novedades"
-          className="mt-6 inline-block text-sm font-bold text-amber-300 sm:hidden"
-        >
-          Ver todas las novedades →
-        </Link>
-      </section>
+        </section>
+        <section className="mx-auto grid max-w-6xl gap-8 px-5 pb-20 sm:px-8 md:grid-cols-2">
+          <TopDonors donors={topDonors} />
+          <RecentDonations donations={donations} participants={participants} />
+        </section>
+      </HomeExperience>
       <section className="border-y border-white/8 bg-white/[0.018]">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-8 md:grid-cols-3">
           <div>

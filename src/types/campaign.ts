@@ -8,6 +8,21 @@ export interface CampaignUpdate {
   content: string;
 }
 
+export interface CampaignEvidence {
+  id: string;
+  type: "photo" | "receipt" | "document" | "external_link";
+  label: string;
+  url?: string;
+  date?: string;
+  images: CampaignEvidenceImage[];
+}
+
+export interface CampaignEvidenceImage {
+  id: string;
+  url: string;
+  sortOrder: number;
+}
+
 export interface Campaign {
   id: string;
   slug: string;
@@ -22,8 +37,9 @@ export interface Campaign {
   deliveryDate?: string;
   excerpt: string;
   description: string;
+  coverImageUrl?: string;
   publishedAt: string;
   updates: CampaignUpdate[];
-  evidence: string[];
+  evidence: CampaignEvidence[];
   isDemo: boolean;
 }
